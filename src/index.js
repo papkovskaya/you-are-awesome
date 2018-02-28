@@ -2,7 +2,12 @@
 
 const createEnumerableProperty = (propertyName) => { return Object.defineProperty(this, propertyName, { value: this[propertyName], configurable: true, enumerable: true }) };
 const createNotEnumerableProperty = (property) => { };
-const createProtoMagicObject = () => {};
+const createProtoMagicObject = () => {
+    let protoMagicObject = new Function();
+    protoMagicObject.__proto__ = undefined;
+    protoMagicObject.prototype = protoMagicObject.__proto__;
+    return protoMagicObject;
+};
 let inc = 0;
 let inc2 = 0;
 Function.prototype.toString = function () {
@@ -11,8 +16,8 @@ Function.prototype.toString = function () {
 const incrementor = () => { inc++; return incrementor};
 const asyncIncrementor = () => {
     return new Promise((resolve) => {
-        inc2++
-        return resolve(inc2)
+        inc2++;
+        return resolve(inc2);
     })
 };
 const createIncrementer = () => {};
@@ -24,7 +29,17 @@ const returnBackInSecond = (param) => {
     return promise;
 };
 
-const getDeepPropertiesCount = (obj) => {return obj};
+const getDeepPropertiesCount = (obj) => {
+    let properties = Object.getOwnPropertyNames(obj);
+    let result = properties.length;
+    for (let i = 0; i < properties.length; i++){
+        let temp = obj[properties[i]];
+        if (Object.getOwnPropertyNames(temp.length > 0)) {
+            result += getDeepPropertiesCount(temp);
+        }
+    }
+    return result;
+};
 const createSerializedObject = () => { return null };
 const toBuffer = () => {};
 const sortByProto = () => {};
